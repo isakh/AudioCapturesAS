@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context=".ui.RecFrag" >
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/fragment_record_title"
+        android:id="@+id/audioRecorderTitle"
+        android:textColor="#ff3eff0f"
+        android:textSize="40dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:elevation="10dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/fragment_record_contact_email"
+        android:id="@+id/authorContact"
+        android:textColor="#ff3eff0f"
+        android:textSize="15dp"
+        android:layout_below="@+id/audioRecorderTitle"
+        android:layout_centerHorizontal="true"
+        android:elevation="10dp" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/appLogoImageView"
+        android:src="@drawable/logo_xxxhdpi"
+        android:layout_below="@+id/audioRecorderTitle"
+        android:layout_centerHorizontal="true"
+        android:elevation="10dp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/fragment_record_REC"
+        android:id="@+id/recButton"
+        android:layout_below="@+id/appLogoImageView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="60dp"
+        android:elevation="5dp"
+        android:drawableLeft="@drawable/recButton64px"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/fragment_record_STOP"
+        android:id="@+id/stopButtonRecFrag"
+        android:layout_below="@+id/recButton"
+        android:layout_centerHorizontal="true"
+        android:elevation="5dp"
+        android:drawableLeft="@drawable/stopButton64px" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/fragment_record_STOP"
+        android:id="@+id/playButtonRecFrag"
+        android:layout_below="@+id/stopButtonRecFrag"
+        android:layout_centerHorizontal="true"
+        android:elevation="5dp"
+        android:drawableLeft="@drawable/playButton64px" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_heigh="wrap_content"
+        android:text="@string/fragment_record_SAVE"
+        android:id="@+id/saveButton"
+        android:layout_below="@+id/playButtonRecFrag"
+        android:layout_centerHorizontal="true"
+        android:elevation="5dp"
+        android:drawableLeft="@drawable/saveButton64px"
+        android:layout_height="wrap_content" />
+
+</RelativeLayout>
