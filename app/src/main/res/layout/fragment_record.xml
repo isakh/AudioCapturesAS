@@ -50,7 +50,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="60dp"
         android:elevation="5dp"
-        android:drawableLeft="@drawable/recButton64px"/>
+        android:drawableLeft="@drawable/recbutton64px"/>
 
     <Button
         android:layout_width="wrap_content"
@@ -60,7 +60,7 @@
         android:layout_below="@+id/recButton"
         android:layout_centerHorizontal="true"
         android:elevation="5dp"
-        android:drawableLeft="@drawable/stopButton64px" />
+        android:drawableLeft="@drawable/stopbutton64px" />
 
     <Button
         android:layout_width="wrap_content"
@@ -70,17 +70,16 @@
         android:layout_below="@+id/stopButtonRecFrag"
         android:layout_centerHorizontal="true"
         android:elevation="5dp"
-        android:drawableLeft="@drawable/playButton64px" />
+        android:drawableLeft="@drawable/playbutton64px" />
 
     <Button
         android:layout_width="wrap_content"
-        android:layout_heigh="wrap_content"
+        android:layout_height="wrap_content"
         android:text="@string/fragment_record_SAVE"
         android:id="@+id/saveButton"
         android:layout_below="@+id/playButtonRecFrag"
         android:layout_centerHorizontal="true"
         android:elevation="5dp"
-        android:drawableLeft="@drawable/saveButton64px"
-        android:layout_height="wrap_content" />
+        android:drawableLeft="@drawable/savebutton64px" />
 
 </RelativeLayout>
