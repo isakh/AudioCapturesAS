@@ -23,8 +23,8 @@ public class AC_AS_Main extends AppCompatActivity {
         setSupportActionBar (toolbar);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
-        tabLayout.addTab (tabLayout.newTab().setText("Tab 1 Java"));
-        tabLayout.addTab (tabLayout.newTab().setText("Tab 2 Java"));
+        tabLayout.addTab (tabLayout.newTab().setText("Tab Rec Java"));
+        tabLayout.addTab (tabLayout.newTab().setText("Rec Test Java"));
         tabLayout.addTab (tabLayout.newTab().setText("Tab 3 Java"));
         tabLayout.setTabGravity (TabLayout.GRAVITY_FILL);
 
@@ -44,6 +44,8 @@ public class AC_AS_Main extends AppCompatActivity {
             @Override
             public void onTabReselected (TabLayout.Tab tab) {}
         });
+
+
     }
 
     @Override
