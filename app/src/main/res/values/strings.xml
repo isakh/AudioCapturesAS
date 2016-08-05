@@ -1,16 +1,8 @@
 <resources>
     <string name="app_name">AudioCaptures </string>
-    <string name="app_title">App Name</string>
+    <string name="app_title">Tiles Puzzle 2.0</string>
     <string name="menu_title">Main_Menu</string>
     <string name="library_title">Library</string>
-
-    <!-- used in fragemnt_record.xml -->
-    <string name="fragment_record_title">Audio Recorder</string>
-    <string name="fragment_record_contact_email">bioacousticsgamification@gmail.com</string>
-    <string name="fragment_record_REC">REC</string>
-    <string name="fragment_record_STOP">STOP</string>
-    <string name="fragment_record_PLAY">PLAY</string>
-    <string name="fragment_record_SAVE">SAVE</string>
 
     <!-- Menu strings -->
     <string name="action_settings">Action_Settings</string>
@@ -21,6 +13,16 @@
     <string name="search">Search</string>
     <string name="share">Share</string>
     <string name="delete">Delete</string>
+
+    <!-- used in fragemnt_record.xml -->
+    <string name="fragment_record_title">Audio Recorder</string>
+    <string name="fragment_record_contact_email">bioacousticsgamification@gmail.com</string>
+    <string name="fragment_record_REC">REC</string>
+    <string name="fragment_record_STOP">STOP</string>
+    <string name="fragment_record_PLAY">PLAY</string>
+    <string name="fragment_record_SAVE">SAVE</string>
+
+    <string name="storage_directory">/audio/</string>
 
     <!-- debug strings -->
     <string name="tab_1_xml">Tab_1_XML</string>

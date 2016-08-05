@@ -8,78 +8,50 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context=".ui.RecFrag" >
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/fragment_record_title"
-        android:id="@+id/audioRecorderTitle"
-        android:textColor="#ff3eff0f"
-        android:textSize="40dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:elevation="10dp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/fragment_record_contact_email"
-        android:id="@+id/authorContact"
-        android:textColor="#ff3eff0f"
-        android:textSize="15dp"
-        android:layout_below="@+id/audioRecorderTitle"
-        android:layout_centerHorizontal="true"
-        android:elevation="10dp" />
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/appLogoImageView"
-        android:src="@drawable/logo_xxxhdpi"
-        android:layout_below="@+id/audioRecorderTitle"
-        android:layout_centerHorizontal="true"
-        android:elevation="10dp" />
+    tools:context=".ui.TestRecFrag" >
 
     <Button
+        android:id="@+id/recButtonRecFrag"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/fragment_record_REC"
-        android:id="@+id/recButton"
-        android:layout_below="@+id/appLogoImageView"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="60dp"
-        android:elevation="5dp"
-        android:drawableLeft="@drawable/recbutton64px"/>
+        android:drawableLeft="@drawable/recbutton64px"
+        android:drawableStart="@drawable/recbutton64px"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/fragment_record_STOP"
         android:id="@+id/stopButtonRecFrag"
-        android:layout_below="@+id/recButton"
-        android:layout_centerHorizontal="true"
-        android:elevation="5dp"
-        android:drawableLeft="@drawable/stopbutton64px" />
-
-    <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/fragment_record_STOP"
-        android:id="@+id/playButtonRecFrag"
-        android:layout_below="@+id/stopButtonRecFrag"
-        android:layout_centerHorizontal="true"
-        android:elevation="5dp"
-        android:drawableLeft="@drawable/playbutton64px" />
+        android:drawableLeft="@drawable/stopbutton64px"
+        android:drawableStart="@drawable/stopbutton64px"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
     <Button
+        android:id="@+id/playButtonRecFrag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/fragment_record_PLAY"
+        android:elevation="5dp"
+        android:drawableLeft="@drawable/playbutton64px"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:id="@+id/saveButtonRecFrag"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/fragment_record_SAVE"
-        android:id="@+id/saveButton"
-        android:layout_below="@+id/playButtonRecFrag"
-        android:layout_centerHorizontal="true"
         android:elevation="5dp"
-        android:drawableLeft="@drawable/savebutton64px" />
+        android:drawableLeft="@drawable/savebutton64px"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
 </RelativeLayout>
