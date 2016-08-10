@@ -22,7 +22,9 @@
     <string name="fragment_record_PLAY">PLAY</string>
     <string name="fragment_record_SAVE">SAVE</string>
 
-    <string name="storage_directory">/audio/</string>
+    <string name="storage_directory">FieldRecordings</string>
+    <string name="test_file_name">TestFile2</string>
+    <string name="audio_file_format">.mp4</string>
 
     <!-- debug strings -->
     <string name="tab_1_xml">Tab_1_XML</string>

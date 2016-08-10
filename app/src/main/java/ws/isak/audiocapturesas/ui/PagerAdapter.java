@@ -20,8 +20,6 @@ public class PagerAdapter extends FragmentStatePagerAdapter {
     public Fragment getItem (int position) {
         switch (position) {
             case 0:
-                //TabFragment1 tab1 = new TabFragment1();
-                //return tab1;
                 RecFrag tabRec = new RecFrag();
                 return tabRec;
             case 1:
