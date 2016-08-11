@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">AudioCaptures </string>
-    <string name="app_title">Tiles Puzzle 2.0</string>
+    <string name="app_title">TBD</string>
     <string name="menu_title">Main_Menu</string>
     <string name="library_title">Library</string>
 
@@ -23,7 +23,7 @@
     <string name="fragment_record_SAVE">SAVE</string>
 
     <string name="storage_directory">FieldRecordings</string>
-    <string name="test_file_name">TestFile2</string>
+    <string name="test_file_name">TestFile</string>
     <string name="audio_file_format">.mp4</string>
 
     <!-- debug strings -->
