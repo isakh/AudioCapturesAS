@@ -18,7 +18,7 @@ public class ConfigurationParameters {
 
     public static final int BUFFER_ELEMENTS_TO_RECORD = 1024;       //playback 2048 (2k) but since
     public static final int BYTES_PER_ELEMENT = 2;                  //2 bytes per elements need half the elements
-    //-------DYNAMIC
+    //-------DYNAMIC - TODO set up user input for changing these if necessary
 
     public static final int RECORDER_SAMPLERATE = 8000;             //Max on emulator,  TODO variable
     public static final int RECORDER_CHANNELS = AudioFormat.CHANNEL_IN_MONO;           //TODO Stereo?!

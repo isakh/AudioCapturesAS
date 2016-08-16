@@ -3,6 +3,7 @@ package ws.isak.audiocapturesas.ui;
 import ws.isak.audiocapturesas.R;
 import ws.isak.audiocapturesas.preferences.ConfigurationParameters;
 
+import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 
 import android.os.Bundle;
@@ -19,7 +20,6 @@ import android.media.AudioRecord;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.File;
@@ -58,6 +58,11 @@ public class RecFrag extends Fragment implements View.OnClickListener {
     private Thread recordingThread = null;  //initialize to null
     private boolean isRecording = false;    //initialize to false
 
+    private FileOutputStream outputStream;
+    private short[] audioShortArr;         //short array input to AudioRecorder.read()
+    private byte[] audioByteArr;           //byte array for FileOutputStream.write()
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -86,13 +91,13 @@ public class RecFrag extends Fragment implements View.OnClickListener {
             case R.id.recButtonRecFrag:
                 System.out.println("RecFrag: onClick: Record Button Pressed");
                 Toast.makeText(getActivity(), "Record Button Pressed", Toast.LENGTH_SHORT).show();
-                startRecording();
+                startAudioRecording();
                 setButtonsStates(false, true, false, false);
                 break;
             case R.id.stopButtonRecFrag:
                 System.out.println("RecFrag: onClick: Stop Button Pressed");
                 Toast.makeText(getActivity(), "stopButton: Stop Button Pressed", Toast.LENGTH_SHORT).show();
-                stopRecording();
+                stopAudioRecording();
                 setButtonsStates(true, false, true, true);
                 break;
             case R.id.playButtonRecFrag:
@@ -144,7 +149,7 @@ public class RecFrag extends Fragment implements View.OnClickListener {
     The subsequent subfolder for the data collected at a given point in time will be created in
     another function.
      */
-    private void setExternalStorageDir () {
+    private void setExternalStorageDir() {
         storageState = android.os.Environment.getExternalStorageState();
         System.out.println("RecFrag: setExternalStorageDir: storageState is: " + storageState);
         //in case of mounting problem, notify user that storage is not available
@@ -174,21 +179,19 @@ public class RecFrag extends Fragment implements View.OnClickListener {
             try {
                 String path = storageDir.getCanonicalPath();
                 System.out.println("RecFrag: setExternalStorageDir: Storage Directory is: " + path);
-            } catch (IOException e) {
+            } catch (IOException | SecurityException e) {
                 e.printStackTrace();
-            } catch (SecurityException ex) {
-                ex.printStackTrace();
             }
         }
     }
 
-    /*
+    /* TODO add this back in?
     A private method that returns the File object (for the Directory) at storageDir
-     */
+
     private File getExternalStorageDir () {
         System.out.println("RecFrag: getExternalStorageDir: returning storage directory");
         return storageDir;
-    }
+    } */
 
 
     /*
@@ -211,66 +214,64 @@ public class RecFrag extends Fragment implements View.OnClickListener {
     /*
     A private method that takes the current timestamp and creates a file for storing a recording
     in the storage directory with test_file_name and the time appended as a unique identifier
-    [TODO: this will not work if networked and multiple instances of the programme are simultaneously
-    unless each user has UID]
+    [TODO: this will not work if networked and multiple instances of the programme are simultaneously unless each user has UID]
     */
-    private void setFieldRecordingFile () {
+    private void setFieldRecordingFile() {
         System.out.println("RecFrag: setFieldRecordingFile: initialized");
         timeStamp = getCurrentTimeStamp();
         System.out.println("RecFrag: setFieldRecordingFile: Timestamp is: " + timeStamp);
 
         fieldRecordingDir = new File(storageDir,
                 getActivity().getString(R.string.test_file_folder)
-                + timeStamp);
+                        + timeStamp);
         isFieldRecordingDirMade = fieldRecordingDir.mkdirs();
         if (fieldRecordingDir.exists()) {
             System.out.println("RecFrag: setFieldRecordingFile: fieldRecordingDir exists is: " + fieldRecordingDir.exists());
         }
         if (!isFieldRecordingDirMade) {
             System.out.println("RecFrag: setFieldRecordingFile: failed to make fieldRecordingDir");
-        }
-        else {
+        } else {
             try {
                 String path = fieldRecordingDir.getCanonicalPath();
                 System.out.println("RecFrag: setFieldRecordingFile: Field Recording Directory is: " + path);
-            } catch (IOException e) {
+            } catch (IOException | SecurityException e) {
                 e.printStackTrace();
-            } catch  (SecurityException ex) {
-                ex.printStackTrace();
             }
         }
-        fieldRecordingFile = new File (fieldRecordingDir,
+        fieldRecordingFile = new File(fieldRecordingDir,
                 getActivity().getString(R.string.test_file_name)
-                + "_"
-                + timeStamp
-                + getActivity().getString(R.string.audio_file_format));
-        isFieldRecordingFileMade = fieldRecordingFile.mkdir();
+                        + "_"
+                        + timeStamp
+                        + getActivity().getString(R.string.audio_file_format));
+        try{
+            isFieldRecordingFileMade = fieldRecordingFile.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         if (fieldRecordingFile.exists()) {       //Tell this to the user so keep as Toast
             System.out.println("RecFrag: setFieldRecordingFile: fieldRecordingFile exists is: " + fieldRecordingFile.exists());
         }
-        if (!isFieldRecordingFileMade){
+        if (!isFieldRecordingFileMade) {
             System.out.println("RecFrag: setFieldRecordingFile: failed to make fieldRecordingFile");
-        }
-        else {
+        } else {
             try {
                 String path = fieldRecordingFile.getCanonicalPath();
                 System.out.println("RecFrag: setFieldRecordingFile: Field Recording File is: " + path);
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (SecurityException e) {
+            } catch (IOException | SecurityException e) {
                 e.printStackTrace();
             }
         }
     }
 
-    private String getFieldRecordingFileName () {
+    /*
+    A public function that returns the file object stored in fieldRecordingFile
+     */
+
+    public File getFieldRecordingFile() {
         try {
-            System.out.println("RecFrag: getFieldRecordingFileName: file name is: " + fieldRecordingFile.getCanonicalPath());
-            return fieldRecordingFile.getCanonicalPath();
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        } catch (SecurityException e) {
+            System.out.println("RecFrag: getFieldRecordingFile: file name is: " + fieldRecordingFile.getCanonicalPath());
+            return fieldRecordingFile;
+        } catch (IOException | SecurityException e) {
             e.printStackTrace();
             return null;
         }
@@ -280,35 +281,56 @@ public class RecFrag extends Fragment implements View.OnClickListener {
     Private function called when the record button is pressed, it starts by instantiating a new
     AudioRecorder object, and sets up a thread writing the audio data to a file.
      */
-    private void startRecording () {
-        System.out.println("RecFrag: startRecording()");
+    private void startAudioRecording() {
+        System.out.println("RecFrag: startAudioRecording(): initialized");
         audioRec = new AudioRecord(MediaRecorder.AudioSource.MIC,
                 ConfigurationParameters.RECORDER_SAMPLERATE,
                 ConfigurationParameters.RECORDER_CHANNELS,
                 ConfigurationParameters.RECORDER_AUDIO_ENCODING,
                 ConfigurationParameters.BUFFER_ELEMENTS_TO_RECORD * ConfigurationParameters.BYTES_PER_ELEMENT);
-        audioRec.startRecording();
+        System.out.println("RecFrag: startAudioRecording: audioRec Created ... ");
+        System.out.println(" ... Sample Rate is: " + ConfigurationParameters.RECORDER_SAMPLERATE);
+        System.out.println(" ... Num Channels is: " + ConfigurationParameters.RECORDER_CHANNELS);
+        System.out.println(" ... Audio Encoding is: " + ConfigurationParameters.RECORDER_AUDIO_ENCODING);
+        System.out.println(" ... Elements to Record is: " + ConfigurationParameters.BUFFER_ELEMENTS_TO_RECORD);
+        System.out.println(" ... Bytes per Element is: " + ConfigurationParameters.BYTES_PER_ELEMENT);
+        try {
+            audioRec.startRecording();
+            System.out.println("RecFrag: startAudioRecording: audioRec.startRecording() called");
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+        }
         isRecording = true;
-        recordingThread = new Thread (new Runnable () {
-           public void run () {
-               writeAudioDataToFile();
-           }
+        recordingThread = new Thread(new Runnable() {
+            public void run() {
+                System.out.println("RecFrag: startAudioRecording: recordingThread initialized");
+                writeAudioDataToFile();
+            }
         }, "AudioRecorder Thread");
         recordingThread.start();
+        System.out.println("RecFrag: startAudioRecording: recordingThread.start() called");
     }
 
     /*
     Private function called when the stop button is pressed.  This stops the recording activity
     and releases the recording thread.
      */
-    private void stopRecording () {
-        System.out.println("RecFrag: stopRecording()");
+    private void stopAudioRecording() {
+        System.out.println("RecFrag: stopAudioRecording(): isRecording is currently: "
+                + isRecording
+                + " :recordingThread is currently: "
+                + recordingThread);
+        isRecording = false;
         if (null != audioRec) {
-            isRecording = false;
+            System.out.println("RecFrag: stopAudioRecording: isRecording set to false: " + !isRecording);
             audioRec.stop();
+            System.out.println("RecFrag: stopAudioRecording: audioRec.stop() called");
             audioRec.release();
+            System.out.println("RecFrag: stopAudioRecording: audioRec.release() called");
             audioRec = null;
+            System.out.println("RecFrag: stopAudioRecording: audioRecorder object audioRec set to null");
             recordingThread = null;
+            System.out.println("RecFrag: stopAudioRecording:  Thread object recordingThread set to null ");
         }
     }
 
@@ -316,53 +338,71 @@ public class RecFrag extends Fragment implements View.OnClickListener {
     Private function that writes the recording input stream audio data to a temporary (?) file
     TODO need to figure out how this file relates to the permanent one in external storage
      */
-    private void writeAudioDataToFile () {
+    private void writeAudioDataToFile() {
         System.out.println("RecFrag: writeAudioDataToFile: initializing");
-        short sData[] = new short [ConfigurationParameters.BUFFER_ELEMENTS_TO_RECORD];
-
-        FileOutputStream outputStream = null;
+        audioShortArr = new short[ConfigurationParameters.BUFFER_ELEMENTS_TO_RECORD];
+        System.out.println("RecFrag: writeAudioDataToFile: audioShortArr Array allocated: Size is: " + audioShortArr.length);
+        outputStream = null;
+        System.out.println("RecFrag: writeAudioDataToFile: file outputStream initialized");
+        setFieldRecordingFile();
+        System.out.println("RecFrag: writeAudioDataToFile: called setFieldRecordingFile()");
+        fieldRecordingFile = getFieldRecordingFile();
         try {
-            setFieldRecordingFile();
-            System.out.println("RecFrag: writeAudioDataToFile: called setFieldRecordingFile()");
-            outputStream = new FileOutputStream(getFieldRecordingFileName());
-        } catch (FileNotFoundException e) {
+            String path = fieldRecordingFile.getCanonicalPath();
+            System.out.println("RecFrag: writeAudioDataToFile: fieldRecordingFile is at: " + path);
+            outputStream = new FileOutputStream(path);
+            System.out.println("RecFrag: writeAudioDataToFile: outputStream initialized");
+        }
+        catch (IOException | SecurityException | NullPointerException e) {
             e.printStackTrace();
         }
-
-        while (isRecording) {
-            //keep collecting microphone output in byte format
-            audioRec.read (sData, 0 , ConfigurationParameters.BUFFER_ELEMENTS_TO_RECORD);
-            System.out.println("Writing Audio Shorts to File: " + sData.toString());
+        while (isRecording && recordingThread != null) {
+            //keep collecting microphone output in short format
+            try {
+                audioRec.read(audioShortArr, 0, ConfigurationParameters.BUFFER_ELEMENTS_TO_RECORD);
+                System.out.println("RecFrag: writeAudioDataToFile: audioRec.read: isRecording: "
+                + isRecording
+                + " : recordingThread: "
+                + recordingThread);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             try {
                 //store mic buffer and write the data to file from buffer
-                byte bData[] = shortToByte (sData);
-                outputStream.write(bData,
+                audioByteArr = shortToByte(audioShortArr);
+                outputStream.write(audioByteArr,
                         0,
                         ConfigurationParameters.BUFFER_ELEMENTS_TO_RECORD * ConfigurationParameters.BYTES_PER_ELEMENT);
-            } catch (IOException e) {
-                e.printStackTrace();;
+            } catch (IOException | NullPointerException e) {
+                e.printStackTrace();
+                ;
             }
         }
         try {
             outputStream.close();
-        } catch (IOException e ) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     /*
-    Private function that converts shorts to bytes.  Used to convert the sData array of shorts that is
-    constructed to read in the data from audioRec into a bData array of bytes for output writen to file.
+    Private function that converts shorts to bytes.  Used to convert the audioShortArr array of
+    shorts that is constructed to read in the data from audioRec into a audioByteArr array of bytes
+    for output written to file.  The bitwise & 0x00FF ensures that the least significant byte is
+    read as is (the cast to (byte) means that only the first 8 bits are read); the bitshift >> 8 then
+    moves the most significant byte right to be copied.
      */
-    private byte[] shortToByte (short[] sData) {
-        System.out.println("RecFrag: shortToByte: initializing");
+    private byte[] shortToByte(short[] sData) {
+        //System.out.println("RecFrag: shortToByte: audioShortArr sData length is: " + sData.length);
         int shortArraySize = sData.length;
-        byte[] outputBytes = new byte [shortArraySize * 2];
+        byte[] outputBytes = new byte[shortArraySize * 2];
+        //System.out.println("RecFrag: shortToByte: allocated outputBytes.length: " + outputBytes.length);
         for (int i = 0; i < shortArraySize; i++) {
-            outputBytes[i * 2] = (byte) (sData[i] & 0x00FF);          //TODO Remind what this does? bit mask
-            outputBytes[(i * 2) + 1] = (byte) (sData[i] >> 8);        //TODO Remind what this does? bit shift
+            outputBytes[i * 2] = (byte) (sData[i] & 0x00FF);
+            outputBytes[(i * 2) + 1] = (byte) (sData[i] >> 8);
             sData[i] = 0;
         }
+        //System.out.println("RecFrag: shortToByte: done iterating over short array");
         return outputBytes;
     }
 }
