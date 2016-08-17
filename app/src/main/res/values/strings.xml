@@ -25,7 +25,8 @@
     <string name="storage_directory">FieldRecordings</string>
     <string name="test_file_folder">TestFiles</string>
     <string name="test_file_name">TestAudioFile</string>
-    <string name="audio_file_format">.pcm</string>
+    <string name="pcm_file_format">.pcm</string>
+    <string name="wav_file_format">.wav</string>
 
     <!-- debug strings -->
     <string name="tab_1_xml">Tab_1_XML</string>
