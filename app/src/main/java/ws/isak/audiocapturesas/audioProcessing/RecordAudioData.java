@@ -4,14 +4,11 @@ import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
 
-import ws.isak.audiocapturesas.R;
 import ws.isak.audiocapturesas.preferences.ConfigurationParameters;
 
 import java.io.BufferedOutputStream;
 import java.io.DataOutputStream;
-import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 
 import java.util.concurrent.Semaphore;
 
@@ -43,11 +40,11 @@ public class RecordAudioData extends Thread {
         this.audioToProcess = audioToProcess;
         this.configParams = configParams;
 
-        int readSize = AudioRecord.getMinBufferSize(configParams.SAMPLERATE,
+        int readSize = AudioRecord.getMinBufferSize(configParams.SAMPLE_RATE,
                 AudioFormat.CHANNEL_IN_MONO,
                 AudioFormat.ENCODING_PCM_16BIT);
         audioRec = new AudioRecord(MediaRecorder.AudioSource.MIC,
-                configParams.SAMPLERATE,
+                configParams.SAMPLE_RATE,
                 configParams.NUM_CHANNELS,
                 configParams.AUDIO_ENCODING,
                 readSize * 2);
@@ -58,17 +55,17 @@ public class RecordAudioData extends Thread {
     AudioRecorder object, and sets up a thread writing the audio data to a file.
    */
     public void startAudioRecording() {
+
         System.out.println("RecordAudioData: startAudioRecording(): initialized");
         System.out.println("RecordAudioData: startAudioRecording: audioRec Created ... ");
-        System.out.println(" ... Sample Rate is: " + configParams.SAMPLERATE);
+        System.out.println(" ... Sample Rate is: " + configParams.SAMPLE_RATE);
         System.out.println(" ... Num Channels is: " + configParams.NUM_CHANNELS);
         System.out.println(" ... Audio Encoding is: " + configParams.AUDIO_ENCODING);
-        //System.out.println(" ... Elements to Record is: " + configParams.BUFFER_ELEMENTS_TO_RECORD);
-        //System.out.println(" ... Bytes per Element is: " + configParams.BYTES_PER_ELEMENT);
 
         recordingThread = new Thread(new Runnable() {
             @Override
             public void run() {
+
                 System.out.println("RecordAudioData: startAudioRecording: recordingThread initialized");
                 try {
                     audioRec.startRecording();
@@ -76,13 +73,26 @@ public class RecordAudioData extends Thread {
                 } catch (IllegalStateException e) {
                     e.printStackTrace();
                 }
-                while (isRecording) {
+                //acquire semaphore for 1 audioRecord Thread
+                try {
+                    audioToProcess.acquire();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                while (isRecording && !audioToProcess.tryAcquire()) {   //isRecording will be true while stopRecording hasn't been pressed
+                                                                        //audioToProcess.tryAcquire will be false until the mutex has been released
                     fillAudioArray();
                 }
                 //when isRecording is false, stop data from mic and release the AudioRecord object
-                //audioRec.stop();
-                //audioRec.release();
-                //audioRec = null;
+                System.out.println("RecordAudioData: statAudioRecording: after: while (isRecording) ... ");
+                System.out.println("... boolean isRecording is: " + isRecording);
+                System.out.println("... Semaphore audioToProcess.tryAcquire() is: " + audioToProcess.tryAcquire());
+                System.out.println("... Thread RecordingThread is " + recordingThread);
+                audioRec.stop();
+                System.out.println("RecordAudioData: startAudioRecording: audioRec.stop() called");
+                audioRec.release();
+                System.out.println("RecordAudioData: startAudioRecording: audioRec.release() called");
+
             }
         }, "AudioRecorder Thread");
         recordingThread.start();
@@ -100,14 +110,10 @@ public class RecordAudioData extends Thread {
                 + " :recordingThread is currently: "
                 + recordingThread);
         isRecording = false;
+        System.out.println("RecordAudioData: stopAudioRecording: isRecording set to false");
 
         //TODO this may be duplicating the process that occurs in startAudioRecording once isRecording is false...
         if (null != audioRec) {
-            //System.out.println("RecFrag: stopAudioRecording: isRecording set to false");
-            audioRec.stop();
-            System.out.println("RecordAudioData: stopAudioRecording: audioRec.stop() called");
-            audioRec.release();
-            System.out.println("RecordAudioData: stopAudioRecording: audioRec.release() called");
             audioRec = null;
             System.out.println("RecordAudioData: stopAudioRecording: audioRecorder object audioRec set to null");
             recordingThread = null;
@@ -126,7 +132,7 @@ public class RecordAudioData extends Thread {
         audioWindowCurIndex++;
         audioToProcess.release();
         if (audioWindowCurIndex == audioWindowShortArr.length) {
-            //if the entire array has been filled, loop and fill from start
+            //if the window array has been filled, loop and fill from start of next window
             audioWindowCurIndex = 0;
         }
     }

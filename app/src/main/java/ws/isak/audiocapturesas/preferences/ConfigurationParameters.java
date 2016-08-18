@@ -21,9 +21,11 @@ public class ConfigurationParameters {
 
     //-------DYNAMIC - TODO set up user input for changing these if necessary
 
-    public final int SAMPLERATE = 8000;                             //Max on emulator,  TODO variable
+    public final int SAMPLE_RATE = 8000;                             //Max on emulator,  TODO variable
     public final int NUM_CHANNELS = AudioFormat.CHANNEL_IN_MONO;    //TODO Stereo?!
     public final int WINDOW_LIMIT = 1000;                           //max windows to process (e.g. time limit for recording)
     public final int SAMPLES_PER_WINDOW = 300;                      //can vary depending on processing efficacy ~300 is good
     public final int AUDIO_ENCODING = AudioFormat.ENCODING_PCM_16BIT;
+
+    
 }

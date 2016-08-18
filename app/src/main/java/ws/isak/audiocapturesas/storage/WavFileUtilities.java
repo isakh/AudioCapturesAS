@@ -102,9 +102,10 @@ public class WavFileUtilities {
 
     public static byte [] wavFromPCM (File pcmFile) {
 
+        byte[] wavHeader;
         byte[] pcmBytes = null;
-        byte[] wavHeader = null;
         byte[] wavBytes = null;
+
         try {
             pcmBytes = FileUtils.readFileToByteArray(pcmFile);
             System.out.println("WavFileUtilities: wavFromPCM: pcmFile.length is: " + pcmBytes.length);
@@ -112,7 +113,7 @@ public class WavFileUtilities {
             e.printStackTrace();
         }
         try {
-            wavHeader = getWAVHeader(ConfigurationParameters.SAMPLERATE,
+            wavHeader = getWAVHeader(ConfigurationParameters.SAMPLE_RATE,
                     ConfigurationParameters.BITS_PER_SAMPLE,
                     pcmBytes.length,
                     ConfigurationParameters.NUM_CHANNELS);
@@ -123,5 +124,5 @@ public class WavFileUtilities {
             e.printStackTrace();
         }
         return wavBytes;
-    } */
+    }*/
 }

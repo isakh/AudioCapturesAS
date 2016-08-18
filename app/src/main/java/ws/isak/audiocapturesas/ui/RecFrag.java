@@ -46,7 +46,7 @@ public class RecFrag extends Fragment implements View.OnClickListener {
     private Button record, stop, play, save;        //Control buttons
     private Context context;
 
-    private Semaphore audioToProcess = new Semaphore(0);
+    private Semaphore audioToProcess = new Semaphore(1);
     private short[][] audioWindows;
 
     //==============================================================================================
@@ -80,10 +80,17 @@ public class RecFrag extends Fragment implements View.OnClickListener {
             case R.id.recButtonRecFrag:
                 System.out.println("RecFrag: onClick: Record Button Pressed");
                 Toast.makeText(getActivity(), "Record Button Pressed", Toast.LENGTH_SHORT).show();
+
+                dataStore.setFieldRecordingFile(getActivity().getString(R.string.wav_file_format));
                 System.out.println("RecFrag: onClick: Record: instantiate new RecordAudioData object");
+
+                //allocate 2D short array for storage of audioRecord data
                 audioWindows = new short [configParams.WINDOW_LIMIT][configParams.SAMPLES_PER_WINDOW];
+                //call constructor on RecordAudioData object
                 recAudio = new RecordAudioData(audioWindows, configParams, audioToProcess);
                 recAudio.startAudioRecording();
+
+                //set the states of the rest of the buttons on the UI to limit interactions
                 setButtonsStates(false, true, false, false);
                 break;
             case R.id.stopButtonRecFrag:

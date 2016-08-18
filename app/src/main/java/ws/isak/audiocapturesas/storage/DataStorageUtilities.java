@@ -91,23 +91,6 @@ public class DataStorageUtilities {
         return storageDir;
     } */
 
-
-    /*
-    A private method that returns the time stamp of the current time as a string.  This is to be
-    used as a UID for file creation even if the user doesn't provide additional unique information
-    */
-    private static String getCurrentTimeStamp() {
-        System.out.println("DataStorageUtilities: getCurrentTimeStamp: initialized");
-        try {
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_HHmmss");
-            String currentTimeStamp = dateFormat.format(new Date());
-            return currentTimeStamp;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
     /*
     A private method that takes the current timestamp and creates a file for storing a recording
     in the storage directory with test_file_name and the time appended as a unique identifier
@@ -165,6 +148,22 @@ public class DataStorageUtilities {
             System.out.println("DataStorageUtilities: getFieldRecordingFile: file name is: " + fieldRecordingFile.getCanonicalPath());
             return fieldRecordingFile;
         } catch (IOException | SecurityException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /*
+    A private method that returns the time stamp of the current time as a string.  This is to be
+    used as a UID for file creation even if the user doesn't provide additional unique information
+    */
+    private static String getCurrentTimeStamp() {
+        System.out.println("DataStorageUtilities: getCurrentTimeStamp: initialized");
+        try {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_HHmmss");
+            String currentTimeStamp = dateFormat.format(new Date());
+            return currentTimeStamp;
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
