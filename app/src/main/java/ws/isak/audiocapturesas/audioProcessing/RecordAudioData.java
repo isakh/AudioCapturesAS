@@ -17,7 +17,8 @@ import java.util.concurrent.Semaphore;
 
 /**
  * Created by isakherman on 8/17/16.  This class is the thread which pulls in audio samples from
- * the microphone.
+ * the microphone.  They are stored in a 2D short array audioWindowShortArr which is initialized in
+ * the RecFrag and passed to the constructor here
  */
 public class RecordAudioData extends Thread {
 
@@ -37,7 +38,7 @@ public class RecordAudioData extends Thread {
     private DataOutputStream dataRecOutStream;
 
     //Constructor
-    RecordAudioData(short[][] audioWindowShortArr, ConfigurationParameters configParams, Semaphore audioToProcess) {
+    public RecordAudioData(short[][] audioWindowShortArr, ConfigurationParameters configParams, Semaphore audioToProcess) {
         this.audioWindowShortArr = audioWindowShortArr;
         this.audioToProcess = audioToProcess;
         this.configParams = configParams;
@@ -79,9 +80,9 @@ public class RecordAudioData extends Thread {
                     fillAudioArray();
                 }
                 //when isRecording is false, stop data from mic and release the AudioRecord object
-                audioRec.stop();
-                audioRec.release();
-                audioRec = null;
+                //audioRec.stop();
+                //audioRec.release();
+                //audioRec = null;
             }
         }, "AudioRecorder Thread");
         recordingThread.start();

@@ -17,24 +17,29 @@ public class AC_AS_Main extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        System.out.println("AC_AS_Main: onCreate: begin");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ac_as_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar (toolbar);
 
+        System.out.println("AC_AS_Main: onCreate: initialize tab layout");
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tabLayout.addTab (tabLayout.newTab().setText("Record/Save"));
         tabLayout.addTab (tabLayout.newTab().setText("Tab 2 Java"));
         tabLayout.addTab (tabLayout.newTab().setText("Tab 3 Java"));
         tabLayout.setTabGravity (TabLayout.GRAVITY_FILL);
 
+        System.out.println ("AC_AS_Main: onCreate: create view pager and pager adapter");
         final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
         final PagerAdapter adapter = new PagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
         viewPager.setAdapter (adapter);
         viewPager.addOnPageChangeListener (new TabLayout.TabLayoutOnPageChangeListener (tabLayout));
+        System.out.println ("AC_AS_Main: onCreate: calling tabLayout.setOnTabSelectedListener");
         tabLayout.setOnTabSelectedListener (new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected (TabLayout.Tab tab) {
+                System.out.println ("AC_AS_Main: onCreate: onTabSelected: calling viewPager.setCurrentItem");
                 viewPager.setCurrentItem (tab.getPosition());
             }
 
@@ -55,6 +60,8 @@ public class AC_AS_Main extends AppCompatActivity {
         return true;
     }
 
+
+    //These are actions associated with the preferences toolbar rather than the tabs for the fragments
     @Override
     public boolean onOptionsItemSelected (MenuItem item) {
         int id = item.getItemId();

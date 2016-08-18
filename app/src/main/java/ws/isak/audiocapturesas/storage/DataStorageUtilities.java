@@ -17,10 +17,9 @@ import java.util.Date;
  * relevant to RecFrag.
  */
 
-
 public class DataStorageUtilities {
 
-    protected Context context;
+    private Context context;
 
     private String storageState;            //the state of external storage as returned by environment
     private String storageDirectory;        //set/get by methods, set as composite of user and path variables
@@ -37,8 +36,8 @@ public class DataStorageUtilities {
     //==============================================================================================
     //Constructor
 
-    public DataStorageUtilities (Context context) {
-        this.context = context.getApplicationContext();
+    public DataStorageUtilities (Context curContext) {
+        this.context = curContext;
     }
 
 
@@ -61,11 +60,11 @@ public class DataStorageUtilities {
         System.out.println("DataStorageUtilities: setExternalStorageDir: setting storageDirectory ...");
         System.out.println( "... Environment.getExternalStorageDirectory().getAbsolutePath() is: "
                 + Environment.getExternalStorageDirectory().getAbsolutePath());
-        System.out.println ("... Resources.getSystem().getString(R.string.storage_directory) is:  "
+        System.out.println ("... context.getString(R.string.storage_directory) is:  "
                 + context.getString(R.string.storage_directory));
         storageDirectory = Environment.getExternalStorageDirectory().getAbsolutePath()
                 + File.separator
-                + Resources.getSystem().getString(R.string.storage_directory)
+                + context.getString(R.string.storage_directory)
                 + File.separator;
         storageDir = new File(storageDirectory);
         isStorageDirMade = storageDir.mkdirs();
@@ -120,7 +119,7 @@ public class DataStorageUtilities {
         System.out.println("DataStorageUtilities: setFieldRecordingFile: Timestamp is: " + timeStamp);
 
         fieldRecordingDir = new File(storageDir,
-                Resources.getSystem().getString(R.string.test_file_folder)
+                context.getString(R.string.test_file_folder)
                         + timeStamp);
         isFieldRecordingDirMade = fieldRecordingDir.mkdirs();
         if (fieldRecordingDir.exists()) {
@@ -136,7 +135,7 @@ public class DataStorageUtilities {
                 e.printStackTrace();
             }
         }
-        fieldRecordingFile = new File(fieldRecordingDir, Resources.getSystem().getString(R.string.test_file_name) + "_" + timeStamp + fileFormat);
+        fieldRecordingFile = new File(fieldRecordingDir, context.getString(R.string.test_file_name) + "_" + timeStamp + fileFormat);
         try{
             isFieldRecordingFileMade = fieldRecordingFile.createNewFile();
         } catch (IOException e) {

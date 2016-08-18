@@ -3,14 +3,17 @@ package ws.isak.audiocapturesas.ui;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.content.Context;
 
 /**
  * Created by isakherman on 7/19/16. This is only a template with a few things extra
  */
 public class PagerAdapter extends FragmentStatePagerAdapter {
 
-    int mNumOfTabs;
+    private int mNumOfTabs;
 
+
+    //constructor
     public PagerAdapter (FragmentManager fm, int NumOfTabs) {
         super (fm);
         this.mNumOfTabs = NumOfTabs;

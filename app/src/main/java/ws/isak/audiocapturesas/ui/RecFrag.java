@@ -11,6 +11,7 @@ import android.content.Context;
 
 import android.os.Bundle;
 
+import android.support.v4.app.TaskStackBuilder;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +27,7 @@ import java.io.DataOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.File;
+import java.util.concurrent.Semaphore;
 
 /**
  * Created by @isakherman on 7/19/16. .
@@ -36,21 +38,28 @@ import java.io.File;
  */
 public class RecFrag extends Fragment implements View.OnClickListener {
 
-    Context context = getActivity().getApplicationContext();
-
-    ConfigurationParameters configParams;
+    ConfigurationParameters configParams = new ConfigurationParameters();
     DataStorageUtilities dataStore;
     WavFileUtilities wavUtils;
     RecordAudioData recAudio;
 
     private Button record, stop, play, save;        //Control buttons
+    private Context context;
+
+    private Semaphore audioToProcess = new Semaphore(0);
+    private short[][] audioWindows;
+
+    //==============================================================================================
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         System.out.println("=================================");
         System.out.println("In RecFrag: STARTING onCreateView");
-
+        //get context from activity
+        System.out.println("RecFrag: onCreateView: context = getActivity()");
+        context = getActivity();
         //create a view from the UI described in record_fragment.xml
         View v = inflater.inflate(R.layout.fragment_record, container, false);
 
@@ -71,7 +80,9 @@ public class RecFrag extends Fragment implements View.OnClickListener {
             case R.id.recButtonRecFrag:
                 System.out.println("RecFrag: onClick: Record Button Pressed");
                 Toast.makeText(getActivity(), "Record Button Pressed", Toast.LENGTH_SHORT).show();
-                //startAudioRecording();
+                System.out.println("RecFrag: onClick: Record: instantiate new RecordAudioData object");
+                audioWindows = new short [configParams.WINDOW_LIMIT][configParams.SAMPLES_PER_WINDOW];
+                recAudio = new RecordAudioData(audioWindows, configParams, audioToProcess);
                 recAudio.startAudioRecording();
                 setButtonsStates(false, true, false, false);
                 break;
