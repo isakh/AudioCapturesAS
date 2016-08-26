@@ -5,7 +5,7 @@ import android.content.res.Resources;
 import android.content.Context;
 
 import android.os.Environment;
-//import android.widget.Toast;
+import android.util.Log;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,6 +18,10 @@ import java.util.Date;
  */
 
 public class DataStorageUtilities {
+    
+    private final String TAG = "DataStorageUtilities: ";
+    private final String TAG2 = " ... ";
+            
 
     private Context context;
 
@@ -50,17 +54,17 @@ public class DataStorageUtilities {
      */
     public  void setExternalStorageDir() {
         storageState = android.os.Environment.getExternalStorageState();
-        System.out.println("DataStorageUtilities: setExternalStorageDir: storageState is: " + storageState);
+        Log.d(TAG, "setExternalStorageDir: storageState is: " + storageState);
         //in case of mounting problem, notify user that storage is not available
         if (!storageState.equals(Environment.MEDIA_MOUNTED)) {
             //send error message to logcat
-            System.out.println("DataStorageUtilities: setExternalStorageDir: ERROR: External Storage is " + storageState);
+            Log.d(TAG, "setExternalStorageDir: ERROR: External Storage is " + storageState);
         }
         //Define the storage directory we want to use and check that it exists
-        System.out.println("DataStorageUtilities: setExternalStorageDir: setting storageDirectory ...");
-        System.out.println( "... Environment.getExternalStorageDirectory().getAbsolutePath() is: "
+        Log.d(TAG, "setExternalStorageDir: setting storageDirectory ...");
+        Log.d(TAG2, "Environment.getExternalStorageDirectory().getAbsolutePath() is: "
                 + Environment.getExternalStorageDirectory().getAbsolutePath());
-        System.out.println ("... context.getString(R.string.storage_directory) is:  "
+        Log.d(TAG2, " context.getString(R.string.storage_directory) is:  "
                 + context.getString(R.string.storage_directory));
         storageDirectory = Environment.getExternalStorageDirectory().getAbsolutePath()
                 + File.separator
@@ -69,14 +73,14 @@ public class DataStorageUtilities {
         storageDir = new File(storageDirectory);
         isStorageDirMade = storageDir.mkdirs();
         if (storageDir.exists()) {
-            System.out.println("DataStorageUtilities: setExternalStorageDir: storageDir exists is: " + storageDir.exists());
+            Log.d(TAG, "setExternalStorageDir: storageDir exists is: " + storageDir.exists());
         }
         if (!isStorageDirMade) {
-            System.out.println("DataStorageUtilities: setExternalStorageDir: failed to make storageDir");
+            Log.v(TAG, "setExternalStorageDir: failed to make storageDir");
         } else {
             try {
                 String path = storageDir.getCanonicalPath();
-                System.out.println("DataStorageUtilities: setExternalStorageDir: Storage Directory is: " + path);
+                Log.d(TAG, "setExternalStorageDir: Storage Directory is: " + path);
             } catch (IOException | SecurityException e) {
                 e.printStackTrace();
             }
@@ -97,23 +101,23 @@ public class DataStorageUtilities {
     [TODO: this will not work if networked and multiple instances of the programme are simultaneously unless each user has UID]
     */
     public void setFieldRecordingFile (String fileFormat ) {
-        System.out.println("DataStorageUtilities: setFieldRecordingFile: initialized");
+        Log.v(TAG, "setFieldRecordingFile: initialized");
         timeStamp = getCurrentTimeStamp();
-        System.out.println("DataStorageUtilities: setFieldRecordingFile: Timestamp is: " + timeStamp);
+        Log.d(TAG, "setFieldRecordingFile: Timestamp is: " + timeStamp);
 
         fieldRecordingDir = new File(storageDir,
                 context.getString(R.string.test_file_folder)
                         + timeStamp);
         isFieldRecordingDirMade = fieldRecordingDir.mkdirs();
         if (fieldRecordingDir.exists()) {
-            System.out.println("DataStorageUtilities: setFieldRecordingFile: fieldRecordingDir exists is: " + fieldRecordingDir.exists());
+            Log.d(TAG, "setFieldRecordingFile: fieldRecordingDir exists is: " + fieldRecordingDir.exists());
         }
         if (!isFieldRecordingDirMade) {
-            System.out.println("DataStorageUtilities: setFieldRecordingFile: failed to make fieldRecordingDir");
+            Log.v(TAG, "setFieldRecordingFile: failed to make fieldRecordingDir");
         } else {
             try {
                 String path = fieldRecordingDir.getCanonicalPath();
-                System.out.println("DataStorageUtilities: setFieldRecordingFile: Field Recording Directory is: " + path);
+                Log.d(TAG, "setFieldRecordingFile: Field Recording Directory is: " + path);
             } catch (IOException | SecurityException e) {
                 e.printStackTrace();
             }
@@ -125,14 +129,14 @@ public class DataStorageUtilities {
             e.printStackTrace();
         }
         if (fieldRecordingFile.exists()) {
-            System.out.println("DataStorageUtilities: setFieldRecordingFile: fieldRecordingFile exists is: " + fieldRecordingFile.exists());
+            Log.d(TAG, "setFieldRecordingFile: fieldRecordingFile exists is: " + fieldRecordingFile.exists());
         }
         if (!isFieldRecordingFileMade) {
-            System.out.println("DataStorageUtilities: setFieldRecordingFile: failed to make fieldRecordingFile");
+            Log.v(TAG, "setFieldRecordingFile: failed to make fieldRecordingFile");
         } else {
             try {
                 String path = fieldRecordingFile.getCanonicalPath();
-                System.out.println("DataStorageUtilities: setFieldRecordingFile: Field Recording File is: " + path);
+                Log.d(TAG, "setFieldRecordingFile: Field Recording File is: " + path);
             } catch (IOException | SecurityException e) {
                 e.printStackTrace();
             }
@@ -145,7 +149,7 @@ public class DataStorageUtilities {
 
     public File getFieldRecordingFile() {
         try {
-            System.out.println("DataStorageUtilities: getFieldRecordingFile: file name is: " + fieldRecordingFile.getCanonicalPath());
+            Log.d(TAG, "getFieldRecordingFile: file name is: " + fieldRecordingFile.getCanonicalPath());
             return fieldRecordingFile;
         } catch (IOException | SecurityException e) {
             e.printStackTrace();
@@ -157,8 +161,8 @@ public class DataStorageUtilities {
     A private method that returns the time stamp of the current time as a string.  This is to be
     used as a UID for file creation even if the user doesn't provide additional unique information
     */
-    private static String getCurrentTimeStamp() {
-        System.out.println("DataStorageUtilities: getCurrentTimeStamp: initialized");
+    private String getCurrentTimeStamp() {
+        Log.v(TAG, "getCurrentTimeStamp: initialized");
         try {
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_HHmmss");
             String currentTimeStamp = dateFormat.format(new Date());

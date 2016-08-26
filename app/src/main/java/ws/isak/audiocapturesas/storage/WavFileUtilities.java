@@ -16,6 +16,8 @@ import org.apache.commons.io.FileUtils;
  */
 public class WavFileUtilities {
 
+    private ConfigurationParameters configParams;
+
     /*
     This method constructs the static WAV file header taking as input from the call to it in method
     wavToPCM the configuration parameters for sample rate, bits per sample and number of channels
@@ -95,16 +97,17 @@ public class WavFileUtilities {
     }
 
 
-    /*  TODO
+    /*
     The wavFromPCM method returns a byte [] array of a complete WAV file from the audio byte []
     stored in file.pcm with the appropriate WAV header.
+    */
 
-
-    public static byte [] wavFromPCM (File pcmFile) {
+    public byte [] wavFromPCM (File pcmFile) {
 
         byte[] wavHeader;
         byte[] pcmBytes = null;
         byte[] wavBytes = null;
+        int dataLength = 0;
 
         try {
             pcmBytes = FileUtils.readFileToByteArray(pcmFile);
@@ -113,16 +116,18 @@ public class WavFileUtilities {
             e.printStackTrace();
         }
         try {
-            wavHeader = getWAVHeader(ConfigurationParameters.SAMPLE_RATE,
-                    ConfigurationParameters.BITS_PER_SAMPLE,
-                    pcmBytes.length,
-                    ConfigurationParameters.NUM_CHANNELS);
-            wavBytes = new byte[ConfigurationParameters.AUDIO_HEADER_LENGTH + pcmBytes.length];
-            System.arraycopy(wavHeader, 0, wavBytes, 0, ConfigurationParameters.AUDIO_HEADER_LENGTH);
-            System.arraycopy(pcmBytes, 0, wavBytes, ConfigurationParameters.AUDIO_HEADER_LENGTH, pcmBytes.length);
+            dataLength = pcmBytes.length;
         } catch (NullPointerException e) {
             e.printStackTrace();
         }
+        wavHeader = getWAVHeader(configParams.SAMPLE_RATE,
+                configParams.BITS_PER_SAMPLE,
+                dataLength,
+                configParams.NUM_CHANNELS);
+        wavBytes = new byte[configParams.AUDIO_HEADER_LENGTH + pcmBytes.length];
+        System.arraycopy(wavHeader, 0, wavBytes, 0, configParams.AUDIO_HEADER_LENGTH);
+        System.arraycopy(pcmBytes, 0, wavBytes, configParams.AUDIO_HEADER_LENGTH, dataLength);
+
         return wavBytes;
-    }*/
+    }
 }

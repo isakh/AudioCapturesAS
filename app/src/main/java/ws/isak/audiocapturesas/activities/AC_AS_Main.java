@@ -4,10 +4,13 @@ import ws.isak.audiocapturesas.ui.PagerAdapter;
 import ws.isak.audiocapturesas.R;
 
 import android.os.Bundle;
+import android.util.Log;
+
 import android.support.v4.view.ViewPager;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -15,31 +18,34 @@ import android.widget.Toast;
 
 public class AC_AS_Main extends AppCompatActivity {
 
+    private final String TAG = "AC_AS_MAIN: ";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        System.out.println("AC_AS_Main: onCreate: begin");
+        Log.v(TAG, "================");
+        Log.v(TAG,"onCreate: begin");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ac_as_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar (toolbar);
 
-        System.out.println("AC_AS_Main: onCreate: initialize tab layout");
+        Log.v(TAG, "onCreate: initialize tab layout");
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tabLayout.addTab (tabLayout.newTab().setText("Record/Save"));
         tabLayout.addTab (tabLayout.newTab().setText("Tab 2 Java"));
         tabLayout.addTab (tabLayout.newTab().setText("Tab 3 Java"));
         tabLayout.setTabGravity (TabLayout.GRAVITY_FILL);
 
-        System.out.println ("AC_AS_Main: onCreate: create view pager and pager adapter");
+        Log.v(TAG, "onCreate: create view pager and pager adapter");
         final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
         final PagerAdapter adapter = new PagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
         viewPager.setAdapter (adapter);
         viewPager.addOnPageChangeListener (new TabLayout.TabLayoutOnPageChangeListener (tabLayout));
-        System.out.println ("AC_AS_Main: onCreate: calling tabLayout.setOnTabSelectedListener");
+        Log.v(TAG, "onCreate: calling tabLayout.setOnTabSelectedListener");
         tabLayout.setOnTabSelectedListener (new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected (TabLayout.Tab tab) {
-                System.out.println ("AC_AS_Main: onCreate: onTabSelected: calling viewPager.setCurrentItem");
+                Log.v(TAG, "onCreate: onTabSelected: calling viewPager.setCurrentItem");
                 viewPager.setCurrentItem (tab.getPosition());
             }
 
